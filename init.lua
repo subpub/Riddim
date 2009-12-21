@@ -123,7 +123,7 @@ if not (... and package.loaded[...] ~= nil) then
 	
 	b:hook("started", function ()
 		b:send(verse.presence());
-		for k, v in pairs(autojoin or {}) do
+		for k, v in pairs(config.autojoin or {}) do
 			if type(k) == "number" then
 				b:join_room(v);
 			elseif type(k) == "string" then
