@@ -11,7 +11,7 @@ function new(stream, config)
 	if not stream then
 		error("riddim.new(): Verse stream required as first parameter", 2);
 	end
-	return setmetatable({ stream = stream, config = config or {} }, riddim_mt);
+	return setmetatable({ stream = stream, config = config or {}, plugins = {} }, riddim_mt);
 end
 
 -- self.conn is ready for stanzas
@@ -75,8 +75,10 @@ function riddim_mt:send_message(to, text, formatted_text)
 end
 
 function riddim_mt:add_plugin(name)
-	require("riddim.plugins."..name);
-	return riddim.plugins[name](self);
+	if not self.plugins[name] then
+		self.plugins[name] = require("riddim.plugins."..name);
+		return riddim.plugins[name](self);
+	end
 end
 	
 -- Built-in bot starter
