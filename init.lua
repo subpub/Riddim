@@ -118,7 +118,7 @@ if not (... and package.loaded[...] ~= nil) then
 	end
 	
 	for _, plugin in ipairs(config.plugins or {"ping"}) do
-		c:add_plugin(plugin);
+		b:add_plugin(plugin);
 	end
 	
 	b:hook("started", function ()
