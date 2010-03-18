@@ -19,6 +19,7 @@ function riddim_mt:start()
 	self:add_plugin("groupchat");
 	self:add_plugin("commands");
 	self:add_plugin("ping");
+	self:add_plugin("tell");
 	self:event("started");
 	self.stream:hook("stanza", function (stanza)
 			local body = stanza:get_child("body");
