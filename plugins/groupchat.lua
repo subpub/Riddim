@@ -60,23 +60,21 @@ function riddim.plugins.groupchat(bot)
 		local occupants = room.occupants;
 		room:hook("presence", function (presence)
 			local nick = presence.nick;
-			if not occupants[nick] then
-				if presence.type ~= "unavailable" then
-					occupants[nick] = {
-						nick = nick;
-						jid = presence.stanza.attr.from;
-						presence = presence.stanza;
-						};
-					if nick == room.nick then
-						room.bot:event("groupchat/joined", room);
-					else
-						room:event("occupant-joined", occupants[nick]);
-					end
+			if not occupants[nick] and presence.stanza.attr.type ~= "unavailable" then
+				occupants[nick] = {
+					nick = nick;
+					jid = presence.stanza.attr.from;
+					presence = presence.stanza;
+					};
+				if nick == room.nick then
+					room.bot:event("groupchat/joined", room);
 				else
-					occupants[nick].presence = presence.stanza;
-					room:event("occupant-left", occupants[nick]);
-					occupants[nick] = nil;
+					room:event("occupant-joined", occupants[nick]);
 				end
+			elseif occupants[nick] and presence.stanza.attr.type == "unavailable" then
+				occupants[nick].presence = presence.stanza;
+				room:event("occupant-left", occupants[nick]);
+				occupants[nick] = nil;
 			end
 		end);
 		self:send(st.presence({to = jid.."/"..nick}));
