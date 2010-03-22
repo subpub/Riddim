@@ -137,6 +137,13 @@ if not (... and package.loaded[...] ~= nil) then
 	end);
 	
 	c:hook("binding-success", function () b:start(); end)
+
+        if config.connect_host then
+           c.connect_host = config.connect_host
+        end
+        if config.connect_port then
+           c.connect_port = config.connect_port
+        end
 	
 	c:connect_client(config.jid, config.password);
 	
