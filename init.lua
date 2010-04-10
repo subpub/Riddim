@@ -124,7 +124,10 @@ if not (... and package.loaded[...] ~= nil) then
 	end
 	
 	b:hook("started", function ()
-		b:send(verse.presence());
+		local presence = verse.presence()
+		if b.caps then
+			presence:add_child(b:caps())
+		end
 		for k, v in pairs(config.autojoin or {}) do
 			if type(k) == "number" then
 				b:join_room(v);
