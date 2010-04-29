@@ -34,8 +34,10 @@ function riddim.plugins.version(bot)
 					local r = "There was an error requesting "..param.."'s version";
 					if condition == "service-unavailable" then
 						r = param.." doesn't reply to version requests";
+					elseif condition == "feature-not-implemented" then
+						r = param.." doesn't support feature requests";
 					elseif condition == "remote-server-not-found" then
-						r = param.." can't be reached via XMPP"
+						r = param.." can't be reached via XMPP";
 					elseif condition and not text then
 						r = r..": "..condition;
 					end
