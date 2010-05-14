@@ -3,30 +3,34 @@ local tellings = {};
 
 function riddim.plugins.tell(bot)
 	bot:hook("commands/tell", function (command)
-			local s, e = command.param:find(" ");
-			local nick = command.param:sub(0, s - 1);
-			local msg = command.param:sub(s + 1);
-			local found = false;
-
-			for tmp,_ in pairs(command.room.occupants) do
-				if tmp == nick then
-					found = true;
-					break;
+			if command.room then
+				local s, e = command.param:find(" ");
+				local nick = command.param:sub(0, s - 1);
+				local msg = command.param:sub(s + 1);
+				local found = false;
+	
+				for tmp,_ in pairs(command.room.occupants) do
+					if tmp == nick then
+						found = true;
+						break;
+					end
 				end
-			end
 
-			if not found then
-				if(tellings[nick] == nil) then
-					tellings[nick] = {};
-				end
-				tellings[nick][#tellings[nick] + 1] = {from=command.sender.nick, msg=msg};
-				return "Ok! Will tell " .. nick .. " what you have said!";
-			else
-				if nick == command.sender.nick then
-					return "Are you going crazy!? You are " .. nick .. "!";
+				if not found then
+					if(tellings[nick] == nil) then
+						tellings[nick] = {};
+					end
+					tellings[nick][#tellings[nick] + 1] = {from=command.sender.nick, msg=msg};
+					return "Ok! Will tell " .. nick .. " what you have said!";
 				else
-					return "Aehm?! ... " .. nick .. " is currently online!";
+					if nick == command.sender.nick then
+						return "Are you going crazy!? You are " .. nick .. "!";
+					else
+						return "Aehm?! ... " .. nick .. " is currently online!";
+					end
 				end
+			else
+				return "Sorry, but this command only makes sense if you execute it in a groupchat.";
 			end
 		end);
 
