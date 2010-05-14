@@ -129,6 +129,7 @@ if not (... and package.loaded[...] ~= nil) then
 		if b.caps then
 			presence:add_child(b:caps())
 		end
+		b:send(presence);
 		for k, v in pairs(config.autojoin or {}) do
 			if type(k) == "number" then
 				b:join_room(v);
