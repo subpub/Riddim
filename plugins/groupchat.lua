@@ -8,6 +8,18 @@ local xmlns_delay = "urn:xmpp:delay";
 
 function riddim.plugins.groupchat(bot)
 	bot.rooms = {};
+
+	bot:hook("started", function ()
+		for k, v in pairs(bot.config.autojoin or {}) do
+			if type(k) == "number" then
+				bot:join_room(v);
+			elseif type(k) == "string" then
+				if type(v) == "string" then
+					bot:join_room(k, v);
+				end
+			end
+		end
+	end);
 	
 	bot.stream:hook("stanza", function (stanza)
 		local room_jid = jid.bare(stanza.attr.from);

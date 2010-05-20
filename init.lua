@@ -16,10 +16,6 @@ end
 
 -- self.conn is ready for stanzas
 function riddim_mt:start()
-	self:add_plugin("groupchat");
-	self:add_plugin("commands");
-	self:add_plugin("ping");
-	self:add_plugin("tell");
 	self:event("started");
 	self.stream:hook("stanza", function (stanza)
 			local body = stanza:get_child("body");
@@ -120,7 +116,7 @@ if not (... and package.loaded[...] ~= nil) then
 		c:hook("incoming-raw", print);
 	end
 	
-	for _, plugin in ipairs(config.plugins or {"ping"}) do
+	for _, plugin in ipairs(config.plugins or {}) do
 		b:add_plugin(plugin);
 	end
 	
@@ -130,15 +126,6 @@ if not (... and package.loaded[...] ~= nil) then
 			presence:add_child(b:caps())
 		end
 		b:send(presence);
-		for k, v in pairs(config.autojoin or {}) do
-			if type(k) == "number" then
-				b:join_room(v);
-			elseif type(k) == "string" then
-				if type(v) == "string" then
-					b:join_room(k, v);
-				end
-			end
-		end
 	end);
 	
 	c:hook("binding-success", function () b:start(); end)
