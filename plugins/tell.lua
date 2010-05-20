@@ -21,16 +21,16 @@ function riddim.plugins.tell(bot)
 						tellings[nick] = {};
 					end
 					tellings[nick][#tellings[nick] + 1] = {from=command.sender.nick, msg=msg};
-					return "Ok! Will tell " .. nick .. " what you have said!";
+					return "Ok!";
 				else
 					if nick == command.sender.nick then
-						return "Are you going crazy!? You are " .. nick .. "!";
+						return "Tell yourself.";
 					else
-						return "Aehm?! ... " .. nick .. " is currently online!";
+						return "" .. nick .. " is currently online!";
 					end
 				end
 			else
-				return "Sorry, but this command only makes sense if you execute it in a groupchat.";
+				return "This command is only available in groupchats.";
 			end
 		end);
 
