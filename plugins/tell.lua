@@ -24,7 +24,7 @@ function riddim.plugins.tell(bot)
 				return "Ok!";
 			else
 				if nick == command.sender.nick then
-					return ""Tell yourself.";
+					return "Tell yourself.";
 				else
 					return "" .. nick .. " is currently online!";
 				end
