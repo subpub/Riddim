@@ -8,6 +8,18 @@ local xmlns_delay = "urn:xmpp:delay";
 
 function riddim.plugins.groupchat(bot)
 	bot.rooms = {};
+
+	bot:hook("started", function ()
+		for k, v in pairs(bot.config.autojoin or {}) do
+			if type(k) == "number" then
+				bot:join_room(v);
+			elseif type(k) == "string" then
+				if type(v) == "string" then
+					bot:join_room(k, v);
+				end
+			end
+		end
+	end);
 	
 	bot.stream:hook("stanza", function (stanza)
 		local room_jid = jid.bare(stanza.attr.from);
@@ -17,14 +29,14 @@ function riddim.plugins.groupchat(bot)
 			local body = stanza:get_child("body");
 			local delay = stanza:get_child("delay", xmlns_delay);
 			local event = {
-					room_jid = room_jid;
-					room = room;
-					sender = room.occupants[nick];
-					nick = nick;
-					body = (body and body:get_text()) or nil;
-					stanza = stanza;
-					delay = (delay and delay.attr.stamp);
-				};
+				room_jid = room_jid;
+				room = room;
+				sender = room.occupants[nick];
+				nick = nick;
+				body = (body and body:get_text()) or nil;
+				stanza = stanza;
+				delay = (delay and delay.attr.stamp);
+			};
 			if stanza.name == "message" then
 				local replied;
 				local r = st.reply(stanza);
@@ -55,7 +67,8 @@ function riddim.plugins.groupchat(bot)
 		local room = setmetatable({
 			bot = bot, jid = jid, nick = nick,
 			occupants = {},
-			events = events.new() }, room_mt);
+			events = events.new()
+		}, room_mt);
 		self.rooms[jid] = room;
 		local occupants = room.occupants;
 		room:hook("presence", function (presence)
@@ -65,7 +78,7 @@ function riddim.plugins.groupchat(bot)
 					nick = nick;
 					jid = presence.stanza.attr.from;
 					presence = presence.stanza;
-					};
+				};
 				if nick == room.nick then
 					room.bot:event("groupchat/joined", room);
 				else

@@ -22,31 +22,30 @@ function riddim.plugins.version(bot)
 			end
 		end
 		
-		bot.stream:query_version(who,
-			function (reply)
-				if not reply.error then
-					local saywho = (who == command.sender.jid and "You are") or (param.." is");
-					command:reply(saywho.." running "..(reply.name or "something")
-						.." version "..(reply.version or "unknown")
-						.." on "..(reply.platform or "an unknown platform"));
-				else
-					local type, condition, text = reply.type, reply.condition, reply.text;
-					local r = "There was an error requesting "..param.."'s version";
-					if condition == "service-unavailable" then
-						r = param.." doesn't reply to version requests";
-					elseif condition == "feature-not-implemented" then
-						r = param.." doesn't support feature requests";
-					elseif condition == "remote-server-not-found" then
-						r = param.." can't be reached via XMPP";
-					elseif condition and not text then
-						r = r..": "..condition;
-					end
-					if text then
-						r = r .. " ("..text..")";
-					end
-					command:reply(r);
+		bot.stream:query_version(who, function (reply)
+			if not reply.error then
+				local saywho = (who == command.sender.jid and "You are") or (param.." is");
+				command:reply(saywho.." running "..(reply.name or "something")
+					.." version "..(reply.version or "unknown")
+					.." on "..(reply.platform or "an unknown platform"));
+			else
+				local type, condition, text = reply.type, reply.condition, reply.text;
+				local r = "There was an error requesting "..param.."'s version";
+				if condition == "service-unavailable" then
+					r = param.." doesn't reply to version requests";
+				elseif condition == "feature-not-implemented" then
+					r = param.." doesn't support feature requests";
+				elseif condition == "remote-server-not-found" then
+					r = param.." can't be reached via XMPP";
+				elseif condition and not text then
+					r = r..": "..condition;
 				end
-			end);
+				if text then
+					r = r .. " ("..text..")";
+				end
+				command:reply(r);
+			end
+		end);
 		return true;
 	end);	
 end
