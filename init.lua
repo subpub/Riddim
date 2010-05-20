@@ -18,41 +18,37 @@ end
 function riddim_mt:start()
 	self:event("started");
 	self.stream:hook("stanza", function (stanza)
-			local body = stanza:get_child("body");
-			local event = {
-				sender = { jid = stanza.attr.from };
-				body = (body and body:get_text()) or nil;
-				stanza = stanza;
-			};
-			if stanza.name == "message" then
-				local replied;
-				local bot = self;
-				function event:reply(reply)
-					if replied then return false; end
-					replied = true;
-					return bot:send_message(stanza.attr.from, stanza.attr.type, reply);
-				end
+		local body = stanza:get_child("body");
+		local event = {
+			sender = { jid = stanza.attr.from };
+			body = (body and body:get_text()) or nil;
+			stanza = stanza;
+		};
+		if stanza.name == "message" then
+			local replied;
+			local bot = self;
+			function event:reply(reply)
+				if replied then return false; end
+				replied = true;
+				return bot:send_message(stanza.attr.from, stanza.attr.type, reply);
 			end
-			local ret;
-			if stanza.name == "iq" and (stanza.attr.type == "get" or stanza.attr.type == "set") then
-				local xmlns = stanza.tags[1] and stanza.tags[1].attr.xmlns;
-				if xmlns then
-					event.xmlns = xmlns;
-					print(event.stanza)
-					ret = self:event("iq/"..xmlns, event);
-					if not ret then
-						ret = self:event(stanza.name, event);
-					end
-				end
-			else
-				ret = self:event(stanza.name, event);
+		end
+		local ret;
+		if stanza.name == "iq" and (stanza.attr.type == "get" or stanza.attr.type == "set") then
+			local xmlns = stanza.tags[1] and stanza.tags[1].attr.xmlns;
+			if xmlns then
+				event.xmlns = xmlns;
+				ret = self:event("iq/"..xmlns, event);
 			end
-			
-			if ret and type(ret) == "table" and ret.name then
-				self:send(ret);
-			end
-			return ret;
-		end, 1);
+		end
+		if not ret then
+			ret = self:event(stanza.name, event);
+		end
+		if ret and type(ret) == "table" and ret.name then
+			self:send(ret);
+		end
+		return ret;
+	end, 1);
 end
 
 function riddim_mt:send(s)
@@ -128,14 +124,14 @@ if not (... and package.loaded[...] ~= nil) then
 		b:send(presence);
 	end);
 	
-	c:hook("binding-success", function () b:start(); end)
+	c:hook("binding-success", function () b:start(); end);
 
-        if config.connect_host then
-           c.connect_host = config.connect_host
-        end
-        if config.connect_port then
-           c.connect_port = config.connect_port
-        end
+	if config.connect_host then
+		c.connect_host = config.connect_host;
+	end
+	if config.connect_port then
+		c.connect_port = config.connect_port;
+	end
 	
 	c:connect_client(config.jid, config.password);
 	

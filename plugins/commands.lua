@@ -18,13 +18,13 @@ function riddim.plugins.commands(bot)
 	
 		if command then
 			local command_event = {
-						command = command,
-						param = param,
-						sender = event.sender,
-						stanza = event.stanza,
-						reply = event.reply,
-						room = event.room, -- groupchat support
-					};
+				command = command,
+				param = param,
+				sender = event.sender,
+				stanza = event.stanza,
+				reply = event.reply,
+				room = event.room, -- groupchat support
+			};
 			local ret = bot:event("commands/"..command, command_event);
 			if type(ret) == "string" then
 				event:reply(ret);
