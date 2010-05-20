@@ -1,4 +1,4 @@
-Module "riddim.plugins.presence"  "plugins/presence.lua"
+Module "riddim.plugins.presence"  "plugins/autosubscribe.lua"
 Module "riddim.plugins.groupchat" "plugins/groupchat.lua"
 Module "riddim.plugins.commands"  "plugins/commands.lua"
 Module "riddim.plugins.version"   "plugins/version.lua"
