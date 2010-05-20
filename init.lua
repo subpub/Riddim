@@ -16,7 +16,6 @@ end
 
 -- self.conn is ready for stanzas
 function riddim_mt:start()
-	self:event("started");
 	self.stream:hook("stanza", function (stanza)
 		local body = stanza:get_child("body");
 		local event = {
@@ -49,6 +48,7 @@ function riddim_mt:start()
 		end
 		return ret;
 	end, 1);
+	self:event("started");
 end
 
 function riddim_mt:send(s)
