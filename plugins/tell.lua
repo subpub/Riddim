@@ -40,6 +40,7 @@ function riddim.plugins.tell(bot)
 					for _,msg in ipairs(tellings[occupant.nick]) do
 						room:send_message(occupant.nick .. ": Welcome back! " .. msg.from .. " told me, to tell you, \"" .. msg.msg .. "\".");
 					end
+                                       tellings[occupant.nick] = nil;
 				end
 			end);
 		end);
