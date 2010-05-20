@@ -67,6 +67,10 @@ function riddim_mt:send_message(to, type, text)
 	self:send(st.message({ to = to, type = type }):tag("body"):text(text));
 end
 
+function riddim_mt:send_presence(to, type)
+	self:send(st.presence({ to = to, type = type }));
+end
+
 function riddim_mt:add_plugin(name)
 	if not self.plugins[name] then
 		self.plugins[name] = require("riddim.plugins."..name);
