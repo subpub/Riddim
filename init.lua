@@ -30,7 +30,7 @@ function riddim_mt:start()
 				function event:reply(reply)
 					if replied then return false; end
 					replied = true;
-					return bot:send_message(stanza.attr.from, reply);
+					return bot:send_message(stanza.attr.from, stanza.attr.type, reply);
 				end
 			end
 			local ret;
@@ -67,8 +67,8 @@ function riddim_mt:hook(name, ...)
 	return self.stream:hook("bot/"..name, ...);
 end
 
-function riddim_mt:send_message(to, text, formatted_text)
-	self:send(st.message({ to = to, type = "chat" }):tag("body"):text(text));
+function riddim_mt:send_message(to, type, text)
+	self:send(st.message({ to = to, type = type }):tag("body"):text(text));
 end
 
 function riddim_mt:add_plugin(name)
