@@ -52,7 +52,11 @@ function riddim_mt:start()
 end
 
 function riddim_mt:send(s)
-	return self.stream:send(tostring(s));
+	return self.stream:send(s);
+end
+
+function riddim_mt:send_iq(s, callback, errback)
+	return self.stream:send_iq(s, callback, errback);
 end
 
 function riddim_mt:event(name, ...)
