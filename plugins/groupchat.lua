@@ -72,7 +72,7 @@ function riddim.plugins.groupchat(bot)
 		self.rooms[jid] = room;
 		local occupants = room.occupants;
 		room:hook("presence", function (presence)
-			local nick = presence.nick;
+			local nick = presence.nick or nick;
 			if not occupants[nick] and presence.stanza.attr.type ~= "unavailable" then
 				occupants[nick] = {
 					nick = nick;
