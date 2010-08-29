@@ -2,8 +2,8 @@ local parse_xeps, xeps_updated_at;
 local xeps = {};
 
 function riddim.plugins.xeps(bot)
-	bot.stream:add_plugin("http");
-	local http = verse.http;
+	require "net.httpclient_listener";
+	local http = require("net.http");
 	bot:hook("commands/xep", function(command)
 		-- Cache XEP list for an hour
 		if os.difftime(os.time(), xeps_updated_at) > (60 * 60) then -- Not refreshed within 1 hour
