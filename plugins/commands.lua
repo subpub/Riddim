@@ -1,5 +1,3 @@
-require "util.xstanza"
-
 function riddim.plugins.commands(bot)
 	local command_pattern = "^%"..(bot.config.command_prefix or "@").."([%a%-%_%d]+)(%s?)(.*)$";
 
