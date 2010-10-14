@@ -1,5 +1,4 @@
 local st = require "util.stanza";
-require "util.xstanza";
 
 local xmlns_version = "jabber:iq:version";
 
