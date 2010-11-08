@@ -1,12 +1,21 @@
 function riddim.plugins.commands(bot)
 	local command_pattern = "^%"..(bot.config.command_prefix or "@").."([%a%-%_%d]+)(%s?)(.*)$";
 
+	local direct_address_pattern = false;
+	if bot.config.nick then
+		direct_address_pattern = "^"..bot.config.nick.."[,: ]+([%a%-%_%d]+)(%s?)(.*)";
+	end
+
 	local function process_command(event)
 		local body = event.body;
 		if not body then return; end
 		if event.delay then return; end -- Don't process old messages from groupchat
 
 		local command, hasparam, param = body:match(command_pattern);
+	
+		if not command and direct_address_pattern then
+			command, hasparam, param = body:match(direct_address_pattern);
+		end
 	
 		if not command then
 			command, hasparam, param = body:match("%[([%a%-%_%d]+)(%s?)(.*)%]");
