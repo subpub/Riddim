@@ -5,6 +5,7 @@ local room_mt = {};
 room_mt.__index = room_mt;
 
 local xmlns_delay = "urn:xmpp:delay";
+local xmlns_muc = "http://jabber.org/protocol/muc";
 
 function riddim.plugins.groupchat(bot)
 	bot.rooms = {};
@@ -90,7 +91,8 @@ function riddim.plugins.groupchat(bot)
 				occupants[nick] = nil;
 			end
 		end);
-		self:send(st.presence({to = jid.."/"..nick}));
+		self:send(st.presence({to = jid.."/"..nick})
+			:tag("x",{xmlns = xmlns_muc}):tag("history",{maxstanzas = 0}));
 		self:event("groupchat/joining", room);
 		return room;
 	end
