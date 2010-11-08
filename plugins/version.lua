@@ -10,7 +10,7 @@ function riddim.plugins.version(bot)
 	};
 
 	bot:hook("commands/version", function (command)
-		local who, param = bot.stream.jid, command.param or (command.room and command.room.nick);
+		local who, param = bot.stream.jid, command.param;
 		if param then
 			if command.room and command.room.occupants[param] then
 				who = command.room.occupants[param].jid;
@@ -23,7 +23,7 @@ function riddim.plugins.version(bot)
 		
 		bot.stream:query_version(who, function (reply)
 			if not reply.error then
-				local saywho = (who == command.sender.jid and "You are") or (param.." is");
+				local saywho = (who == command.sender.jid and "You are") or (param and param.." is" or "I am");
 				command:reply(saywho.." running "..(reply.name or "something")
 					.." version "..(reply.version or "unknown")
 					.." on "..(reply.platform or "an unknown platform"));
