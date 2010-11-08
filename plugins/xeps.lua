@@ -55,6 +55,7 @@ function handle_xep_command(command)
 						xepnum = string.rep("0", 4-x:len())..x;
 						local xep = xeps[tostring(x)];
 						ret = string.format("%s XEP-%s: %s%s", ret, xep.number, xep.name, ((_ < #results) and ",") or "");
+						if _ > 5 then ret = ret .. " " .. (#results - 5) .. " more"; break; end
 					end
 					return ret;
 				end
