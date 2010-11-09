@@ -1,8 +1,22 @@
 local st = require "util.stanza";
+local memory_ns = "http://code.matthewwild.co.uk/riddim/plugins/tell"
+local serializer = false;
 local tellings = {};
 
 function riddim.plugins.tell(bot)
+	if bot.config.remember_tells then
+		bot.stream:add_plugin("private");
+		serializer = require "json"; --TODO other serializer?
+	end
+
 	local sameroom = bot.config.tell_in_same_room;
+
+	local function remember()
+		if serializer then
+			bot.stream:private_set("tellings", memory_ns, serializer.encode(tellings), function () end);
+		end
+	end
+
 	bot:hook("commands/tell", function (command)
 		if not command.room then
 			return "This command is only available in groupchats.";
@@ -36,6 +50,7 @@ function riddim.plugins.tell(bot)
 			tellings[nick_id] = {};
 		end
 		tellings[nick_id][#tellings[nick_id] + 1] = {from=command.sender.nick, msg=msg};
+		remember();
 		return "Ok!";
 	end);
 
@@ -90,12 +105,27 @@ function riddim.plugins.tell(bot)
 		if number > 1 then
 			tellings[nick_id][id] = tellings[nick_id][number];
 			tellings[nick_id][number] = nil;
+			remember();
 			return "what was I supposed to tell "..nick.." again ?";
 		else
 			tellings[nick_id] = nil;
+			remember();
 			return "who is "..nick.." anyway ?";
 		end
 	end);
+
+	if serializer then
+		bot:hook("started", function() -- restore memory
+			bot.stream:private_get("tellings", memory_ns, function (what)
+				if what then
+					local data = tostring(what:get_text());
+					if data and #data > 0 then
+						tellings = serializer.decode(data);
+					end
+				end
+			end);
+		end);
+	end
 
 	bot:hook("groupchat/joined", function (room)
 		room:hook("occupant-joined", function (occupant)
@@ -105,6 +135,7 @@ function riddim.plugins.tell(bot)
 					room:send_message(occupant.nick .. ": Welcome back! " .. msg.from .. " told me, to tell you, \"" .. msg.msg .. "\".");
 				end
 				tellings[nick_id] = nil;
+				remember();
 			end
 		end);
 	end);
