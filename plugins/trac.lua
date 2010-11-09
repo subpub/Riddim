@@ -7,12 +7,8 @@ function riddim.plugins.trac(bot)
 	local trac = bot.config.trac;
 	if not trac then return end
 
-	--require "net.httpclient_listener";
-	local http = --require("net.http");
-	{ request = function(url, iduno, callback) 
-		local data = io.popen("curl -s " .. url):read("*a");
-		return callback(data, 200);
-	end; }
+	require "net.httpclient_listener";
+	local http = require("net.http");
 
 	bot:hook("commands/ticket", function(command)
 		if not command.param then return end
