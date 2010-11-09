@@ -86,9 +86,14 @@ function riddim.plugins.groupchat(bot)
 					room:event("occupant-joined", occupants[nick]);
 				end
 			elseif occupants[nick] and presence.stanza.attr.type == "unavailable" then
-				occupants[nick].presence = presence.stanza;
-				room:event("occupant-left", occupants[nick]);
-				occupants[nick] = nil;
+				if nick == room.nick then
+					room.bot:event("groupchat/left", room);
+					self.rooms[room.jid] = nil;
+				else
+					occupants[nick].presence = presence.stanza;
+					room:event("occupant-left", occupants[nick]);
+					occupants[nick] = nil;
+				end
 			end
 		end);
 		self:send(st.presence({to = jid.."/"..nick})
@@ -115,7 +120,6 @@ end
 function room_mt:leave(message)
 	self.bot:event("groupchat/leaving", room);
 	self:send(st.presence({type="unavailable"}));
-	self.bot:event("groupchat/left", room);
 end
 
 function room_mt:event(name, arg)
