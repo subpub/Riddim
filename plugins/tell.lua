@@ -2,6 +2,7 @@ local st = require "util.stanza";
 local tellings = {};
 
 function riddim.plugins.tell(bot)
+	local sameroom = bot.config.tell_in_same_room;
 	bot:hook("commands/tell", function (command)
 		if not command.room then
 			return "This command is only available in groupchats.";
@@ -29,10 +30,12 @@ function riddim.plugins.tell(bot)
 			end
 		end
 
-		if tellings[nick] == nil then
-			tellings[nick] = {};
+		local nick_id = sameroom and command.room.jid .. "/" .. nick or nick;
+
+		if tellings[nick_id] == nil then
+			tellings[nick_id] = {};
 		end
-		tellings[nick][#tellings[nick] + 1] = {from=command.sender.nick, msg=msg};
+		tellings[nick_id][#tellings[nick_id] + 1] = {from=command.sender.nick, msg=msg};
 		return "Ok!";
 	end);
 
@@ -58,48 +61,50 @@ function riddim.plugins.tell(bot)
 		end
 
 		-- no message for that user
-		if not tellings[nick] then
+		local nick_id = sameroom and command.room.jid .. "/" .. nick or nick;
+		if not tellings[nick_id] then
 			return "I have no messages for "..nick;
 		end
 
 		-- no message id and message for that user
 		if id == nil then
 			local response = "I am supposed to relay the following message to "..nick.." :";
-			for index,msg in ipairs(tellings[nick]) do
+			for index,msg in ipairs(tellings[nick_id]) do
 				response = response .. "\n#"..index.." : "..msg.msg;
 			end
 			return response;
 		end
 
 		-- check the message id is valid
-		local number = #tellings[nick];
+		local number = #tellings[nick_id];
 		id = tonumber(id)
 		if id == nil or id < 1 or id > number then
 			return "I need a valid message #id .. sigh !!\n"..nick.." has "..number.." message(s)";
 		end
 
-		if tellings[nick][id].from ~= command.sender.nick then
-			return "you never said that, "..tellings[nick][id].from.." did !";
+		if tellings[nick_id][id].from ~= command.sender.nick then
+			return "you never said that, "..tellings[nick_id][id].from.." did !";
 		end
 
 		-- remove the message
 		if number > 1 then
-			tellings[nick][id] = tellings[nick][number];
-			tellings[nick][number] = nil;
+			tellings[nick_id][id] = tellings[nick_id][number];
+			tellings[nick_id][number] = nil;
 			return "what was I supposed to tell "..nick.." again ?";
 		else
-			tellings[nick] = nil;
+			tellings[nick_id] = nil;
 			return "who is "..nick.." anyway ?";
 		end
 	end);
 
 	bot:hook("groupchat/joined", function (room)
 		room:hook("occupant-joined", function (occupant)
-			if(tellings[occupant.nick] ~= nil) then
-				for _,msg in ipairs(tellings[occupant.nick]) do
+			local nick_id = sameroom and room.jid .. "/" .. occupant.nick or occupant.nick;
+			if(tellings[nick_id] ~= nil) then
+				for _,msg in ipairs(tellings[nick_id]) do
 					room:send_message(occupant.nick .. ": Welcome back! " .. msg.from .. " told me, to tell you, \"" .. msg.msg .. "\".");
 				end
-				tellings[occupant.nick] = nil;
+				tellings[nick_id] = nil;
 			end
 		end);
 	end);
