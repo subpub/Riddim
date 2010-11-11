@@ -107,7 +107,7 @@ function room_mt:send(stanza)
 	if stanza.name == "message" and not stanza.attr.type then
 		stanza.attr.type = "groupchat";
 	end
-	if stanza.attr.type == "groupchat" then
+	if stanza.attr.type == "groupchat" or not stanza.attr.to then
 		stanza.attr.to = self.jid;
 	end
 	self.bot:send(stanza);
