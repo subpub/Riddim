@@ -122,6 +122,20 @@ function room_mt:leave(message)
 	self:send(st.presence({type="unavailable"}));
 end
 
+function room_mt:set_role(nick, role, reason)
+	self:send(st.iq({type="set"})
+		:query(xmlns_muc .. "#admin")
+			:tag("item", {nick = nick, role = role})
+				:tag("reason"):text(reason or ""));
+end
+
+function room_mt:set_affiliation(nick, affiliation, reason)
+	self:send(st.iq({type="set"})
+		:query(xmlns_muc .. "#admin")
+			:tag("item", {nick = nick, affiliation = affiliation})
+				:tag("reason"):text(reason or ""));
+end
+
 function room_mt:event(name, arg)
 	self.bot.stream:debug("Firing room event: %s", name);
 	return self.events.fire_event(name, arg);
