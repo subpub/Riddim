@@ -80,6 +80,15 @@ function riddim.plugins.groupchat(bot)
 					jid = presence.stanza.attr.from;
 					presence = presence.stanza;
 				};
+				local x = presence.stanza:get_child("x", xmlns_muc .. "#user");
+				if x then
+					local x_item = x:get_child("item");
+					if x_item and x_item.attr then
+						occupants[nick].real_jid    = x_item.attr.jid;
+						occupants[nick].affiliation = x_item.attr.affiliation;
+						occupants[nick].role        = x_item.attr.role;
+					end
+				end
 				if nick == room.nick then
 					room.bot:event("groupchat/joined", room);
 				else
