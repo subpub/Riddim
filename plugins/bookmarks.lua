@@ -4,6 +4,8 @@ local dump = require "util.serialization".serialize;
 -- set allow_add_bookmarks = true; in config to enable the bookmark command
 
 function riddim.plugins.bookmarks(bot)
+	local my_bookmarks = {};
+
 	bot.stream:add_plugin("private");
 
 	local function get_bookmarks(callback) 
@@ -39,10 +41,13 @@ function riddim.plugins.bookmarks(bot)
 	local function join_bookmarked_rooms()
 		get_bookmarks(function(storage)
 			for i, room in ipairs(storage) do
-				if room.name == "conference" and room.attr.jid and room.attr.autojoin == "true" or room.attr.autojoin == "1" then
-					nick = room:get_child("nick");
-					nick = nick and nick[1] or bot.config.nick;
-					bot:join_room(room.attr.jid, nick);
+				if room.name == "conference" and room.attr.jid then
+					my_bookmarks[room.attr.jid] = true; -- to know which rooms are bookmarked
+					if room.attr.autojoin == "true" or room.attr.autojoin == "1" then
+						nick = room:get_child("nick");
+						nick = nick and nick[1] or bot.config.nick;
+						bot:join_room(room.attr.jid, nick);
+					end
 					-- TODO Passwords
 					-- Maybe get the hook in before the groupchat is loaded
 					-- and add to the bot.config.autojoin variable?
@@ -56,6 +61,9 @@ function riddim.plugins.bookmarks(bot)
 	if bot.config.allow_add_bookmarks then
 		bot:hook("commands/bookmark", function(command)
 			local room = command.param and jid.bare(command.param) or command.room.jid;
+			if my_bookmarks[room] then return "Already bookmarked" end
+			my_bookmarks[room] = true;
+				
 			add_bookmark({ jid = room, autojoin = "true" }, function() command:reply("Bookmarked " .. room) end);
 		end);
 	end
