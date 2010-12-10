@@ -1,5 +1,4 @@
 local st = require "util.stanza";
-local dump = require "util.serialization".serialize;
 
 -- set allow_add_bookmarks = true; in config to enable the bookmark command
 
