@@ -33,6 +33,9 @@ function riddim.plugins.commands(bot)
 				room = event.room, -- groupchat support
 			};
 			local ret = bot:event("commands/"..command, command_event);
+			if ret == nil then
+				ret = bot:event("unhandled-command", command_event);
+			end
 			if type(ret) == "string" then
 				event:reply(ret);
 			end
