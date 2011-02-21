@@ -37,6 +37,8 @@ function handle_xkcd_command(command)
 		if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
 			if not tonumber(xkcdnum) then -- Search for an xkcd
 				xkcdnum = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
+					:gsub("[%[]",function(s) return "%" .. s end)
+					:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end);
 				local results = {};
 				for x, xkcd in pairs(xkcd_list) do
 					name = " "..xkcd:lower().." ";
