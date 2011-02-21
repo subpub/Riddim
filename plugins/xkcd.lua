@@ -36,6 +36,7 @@ function handle_xkcd_command(command)
 		local xkcdnum = command.param;
 		if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
 			if not tonumber(xkcdnum) then -- Search for an xkcd
+				xkcdnum = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
 				local results = {};
 				for x, xkcd in pairs(xkcd_list) do
 					name = " "..xkcd:lower().." ";
