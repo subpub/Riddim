@@ -44,7 +44,7 @@ function riddim.plugins.bookmarks(bot)
 					my_bookmarks[room.attr.jid] = true; -- to know which rooms are bookmarked
 					if room.attr.autojoin == "true" or room.attr.autojoin == "1" then
 						nick = room:get_child("nick");
-						nick = nick and nick[1] or bot.config.nick;
+						nick = nick and nick[1] or nil;
 						bot:join_room(room.attr.jid, nick);
 					end
 					-- TODO Passwords
