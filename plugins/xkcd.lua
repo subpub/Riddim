@@ -41,8 +41,8 @@ function handle_xkcd_command(command)
 					:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end);
 				local results = {};
 				for x, xkcd in pairs(xkcd_list) do
-					name = " "..xkcd:lower().." ";
-					if name:match(xkcdnum:lower():gsub("%-", "%%-")) then
+					name = xkcd:lower()
+					if name:match(xkcdnum:lower()) then
 						table.insert(results, x);
 						--return commands.xkcd(msg, x);
 					end
