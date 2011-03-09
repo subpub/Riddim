@@ -36,8 +36,8 @@ function handle_xkcd_command(command)
 		local xkcdnum = command.param;
 		if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
 			if not tonumber(xkcdnum) then -- Search for an xkcd
-				xkcdnum = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
-					:lower()
+				xkcdnum = xkcdnum:lower()
+				local xkcdpat = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
 					:gsub("[%[]",function(s) return "%" .. s end)
 					:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end);
 				local results = {};
@@ -45,7 +45,7 @@ function handle_xkcd_command(command)
 					name = xkcd:lower()
 					if name == xkcdnum then -- exact match
 						return xkcd..", http://xkcd.org/"..x.."/";
-					elseif name:match(xkcdnum) then
+					elseif name:match(xkcdpat) then
 						table.insert(results, x);
 						--return commands.xkcd(msg, x);
 					end
