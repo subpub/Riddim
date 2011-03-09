@@ -47,7 +47,7 @@ function riddim.plugins.groupchat(bot)
 				if not reply then reply = "Nothing to say to you"; end
 				if replied then return false; end
 				replied = true;
-				if r.attr.type == "groupchat" and reply:sub(1,4) ~= "/me " then
+				if reply:sub(1,4) ~= "/me " and event.sender and r.attr.type == "groupchat" then
 					reply = event.sender.nick..": "..reply;
 				end
 				room:send(r:tag("body"):text(reply));
