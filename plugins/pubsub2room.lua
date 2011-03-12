@@ -10,10 +10,18 @@ pubsub2room = {
 };
 --]]
 
+local st = require "util.stanza";
+
 -- FIXME Should this really be here?
 local extractor_mt = {
 	__index = function (t, k)
-		local n = t.stanza;
+		local n;
+		if k:match("^data%.") then
+			k = k:gsub("^data.", "");
+			n = t.data;
+		else
+			n = t.stanza;
+		end
 		for x in k:gmatch("[^.]+") do
 			n = n:get_child(x);
 			if not n then return end
@@ -22,9 +30,8 @@ local extractor_mt = {
 	end
 };
 
-local function new_extractor(stanza, ...)
-	local st = stanza:get_child(...)
-	return st and setmetatable({ stanza = st }, extractor_mt) or nil;
+local function new_extractor(stanza, data)
+	return stanza and setmetatable({ stanza = stanza, data = data }, extractor_mt) or nil;
 end
 
 function riddim.plugins.pubsub2room(bot)
@@ -35,8 +42,8 @@ function riddim.plugins.pubsub2room(bot)
 	bot:hook("pubsub/event", function(event)
 		local conf = config[event.from .. "#" .. event.node];
 		local room = bot.rooms[conf.room];
-		local entry = event.item and new_extractor(event.item, "entry", "http://www.w3.org/2005/Atom")
-		-- FIXME or forever be limited to Atom!
+		local data = st.stanza(""):tag("id"):text(event.item.attr.id);
+		local entry = event.item and new_extractor(event.item.tags[1], data)
 
 		if not conf or not entry or not room then return end
 		local message = conf.template:gsub("%${([^}]+)}", entry);
