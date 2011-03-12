@@ -34,6 +34,8 @@ local function new_extractor(stanza, data)
 	return stanza and setmetatable({ stanza = stanza, data = data }, extractor_mt) or nil;
 end
 
+local last_message_time = 0;
+
 function riddim.plugins.pubsub2room(bot)
 	local bare_jid = require "util.jid".bare;
 	bot:add_plugin("pubsub");
@@ -47,7 +49,17 @@ function riddim.plugins.pubsub2room(bot)
 
 		if not conf or not entry or not room then return end
 		local message = conf.template:gsub("%${([^}]+)}", entry);
-		room:send_message(message);
+		
+		-- Throttle to 1 message/second so we don't flood the room
+		if os.time() - last_message_time > 0 then
+			room:send_message(message);
+			last_message_time = os.time();
+		else
+			last_message_time = last_message_time + 1;
+			verse.add_task(last_message_time - os.time(), function ()
+				room:send_message(message);
+			end);
+		end
 	end);
 
 	-- FIXME When to unsubscribe?
