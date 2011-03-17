@@ -124,6 +124,10 @@ if not (... and package.loaded[...] ~= nil) then
 		b:add_plugin(plugin);
 	end
 	
+	for _, plugin in ipairs(config.stream_plugins or {}) do
+		c:add_plugin(plugin);
+	end
+	
 	b:hook("started", function ()
 		local presence = verse.presence()
 		if b.caps then
