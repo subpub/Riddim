@@ -30,7 +30,7 @@ function handle_xep_command(command)
 		local xepnum = command.param;
 		if not xepnum then return "Please supply an XEP number or a search string :)"; end
 			if not tonumber(xepnum) then -- Search for an XEP
-				if xepnum:match("^%d+ ex") then
+				if xepnum:match("^(%d+) ex%S* (%d+)$") then
 					local num, example = xepnum:match("^(%d+) ex%S* (%d+)$");
 					return "http://xmpp.org/extensions/xep-"..string.rep("0", 4-num:len())..num..".html#example-"..tostring(example);
 				end
