@@ -1,0 +1,11 @@
+Module "riddim.plugins.autosubscribe"  "plugins/autosubscribe.lua"
+Module "riddim.plugins.groupchat"      "plugins/groupchat.lua"
+Module "riddim.plugins.commands"       "plugins/commands.lua"
+Module "riddim.plugins.version"        "plugins/version.lua"
+Module "riddim.plugins.ping"           "plugins/ping.lua"
+Module "riddim.plugins.tell"           "plugins/tell.lua"
+Module "riddim.plugins.uptime"         "plugins/uptime.lua"
+
+Main "init.lua"
+
+Output "riddim.lua"
