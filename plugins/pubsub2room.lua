@@ -23,6 +23,11 @@ local extractor_mt = {
 			n = t.stanza;
 		end
 		for x in k:gmatch("[^.]+") do
+			local m, a = x:match("^([^@]*)@(.*)$");
+			if m and a then
+				m = n:get_child(m);
+				return m and m.attr[a] or nil;
+			end
 			n = n:get_child(x);
 			if not n then return end
 		end
