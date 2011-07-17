@@ -7,9 +7,9 @@ function riddim.plugins.xkcd(bot)
 	local http = require("net.http");
 	bot:hook("commands/xkcd", function(command)
 		if os.difftime(os.time(), xkcd_list_updated_at) > (3 * 60 * 60) then -- Not refreshed within 3 hours
-			http.request('http://xkcd.com/archive/', {
-					headers = { ["If-Modified-Since"] = os.date("!%a, %d %b %Y %T %Z", xkcd_list_updated_at or 0) }
-				}, function (data, code)
+            --COMPAT We could have saved 6 bytes here, but Microsoft apparently hates %T, so you got this gigantic comment instead.
+			-- http.request('http://xkcd.com/archive/', { headers = { ["If-Modified-Since"] = os.date("!%a, %d %b %Y %T %Z", xkcd_list_updated_at or 0) } }, function (data, code)
+            http.request('http://xkcd.com/archive/', { headers = { ["If-Modified-Since"] = os.date("!%a, %d %b %Y %H:%M:%S %Z", xkcd_list_updated_at or 0) } }, function (data, code)
 				if code == 200 then
 					xkcd_list_updated_at = os.time();
 					print("debug", "got "..(#data or 0).." bytes of data");
