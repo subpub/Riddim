@@ -33,46 +33,46 @@ function riddim.plugins.xkcd(bot)
 end
 
 function handle_xkcd_command(command)
-		local xkcdnum = command.param;
-		if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
-			if not tonumber(xkcdnum) then -- Search for an xkcd
-				xkcdnum = xkcdnum:lower()
-				local xkcdpat = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
-					:gsub("[%[]",function(s) return "%" .. s end)
-					:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end);
-				local results = {};
-				for x, xkcd in pairs(xkcd_list) do
-					name = xkcd:lower()
-					if name == xkcdnum then -- exact match
-						return xkcd..", http://xkcd.org/"..x.."/";
-					elseif name:match(xkcdpat) then
-						table.insert(results, x);
-						--return commands.xkcd(msg, x);
-					end
-				end
-				if #results == 0 then
-					return "Sorry, I couldn't find a match";
-				elseif #results == 1 then
-					command.param = results[1];
-					return handle_xkcd_command(command);
-				else
-					-- We have more than one match
-					local ret = "Multiple matches:";
-					for _, x in ipairs(results) do
-						local xkcdnum = tostring(tonumber(x));
-						local xkcd = xkcd_list[tostring(x)];
-						ret = string.format("%s %s%s", ret, xkcd, ((_ < #results) and ",") or "");
-						if _ > 5 then ret = ret .. " " .. (#results - 5) .. " more"; break; end
-					end
-					return ret;
-				end
-			end
-			-- Check that xkcdnum is a valid number
-			xkcdnum = tostring(tonumber(xkcdnum));
-			if not xkcdnum then return "What XKCD strip number? Or enter a search string."; end
-			xkcd = xkcd_list[xkcdnum];
-			if not xkcd then return "Sorry, I don't think there is a XKCD #"..xkcdnum; end
-			return xkcd..", http://xkcd.org/"..xkcdnum.."/";
+    local xkcdnum = command.param;
+    if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
+    if not tonumber(xkcdnum) then -- Search for an xkcd
+        xkcdnum = xkcdnum:lower()
+        local xkcdpat = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
+            :gsub("[%[]",function(s) return "%" .. s end)
+            :gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end);
+        local results = {};
+        for x, xkcd in pairs(xkcd_list) do
+            name = xkcd:lower()
+            if name == xkcdnum then -- exact match
+                return xkcd..", http://xkcd.org/"..x.."/";
+            elseif name:match(xkcdpat) then
+                table.insert(results, x);
+                --return commands.xkcd(msg, x);
+            end
+        end
+        if #results == 0 then
+            return "Sorry, I couldn't find a match";
+        elseif #results == 1 then
+            command.param = results[1];
+            return handle_xkcd_command(command);
+        else
+            -- We have more than one match
+            local ret = "Multiple matches:";
+            for _, x in ipairs(results) do
+                local xkcdnum = tostring(tonumber(x));
+                local xkcd = xkcd_list[tostring(x)];
+                ret = string.format("%s %s%s", ret, xkcd, ((_ < #results) and ",") or "");
+                if _ > 5 then ret = ret .. " " .. (#results - 5) .. " more"; break; end
+            end
+            return ret;
+        end
+    end
+    -- Check that xkcdnum is a valid number
+    xkcdnum = tostring(tonumber(xkcdnum));
+    if not xkcdnum then return "What XKCD strip number? Or enter a search string."; end
+    xkcd = xkcd_list[xkcdnum];
+    if not xkcd then return "Sorry, I don't think there is a XKCD #"..xkcdnum; end
+    return xkcd..", http://xkcd.org/"..xkcdnum.."/";
 end
 
 function parse_xkcd_list(t)
