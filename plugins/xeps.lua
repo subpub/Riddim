@@ -79,14 +79,14 @@ function parse_xeps(t)
 		for k,v in string.gmatch(b,"<(%w+)>(.-)</%1>") do
 			currxep[k] = v;
 		end
+		if xeps_short[currxep.shortname] == nil then
+			xeps_short[currxep.shortname] = currxep.number;
+		elseif xeps_short[currxep.shortname] then
+			xeps_short[currxep.shortname] = false; -- kill dupes
+		end
 		xeps[currxep.number] = { };
 		for k, v in pairs(currxep) do
 			xeps[currxep.number][k] = v;
-			if xeps_short[currxep.shortname] == nil then
-				xeps_short[currxep.shortname] = currxep.number;
-			elseif xeps_short[currxep.shortname] then
-				xeps_short[currxep.shortname] = false; -- kill dupes
-			end
 		end
 	end
 	xeps["0028"] = { number = "0028", name = "XSF Plans for World Domination", type="Top Secret", status = "Hidden", updated = "Work ongoing" };
