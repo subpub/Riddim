@@ -1,5 +1,5 @@
 local parse_xeps, xeps_updated_at;
-local xeps = {};
+local xeps, xeps_short = {}, {};
 
 function riddim.plugins.xeps(bot)
 	require "net.httpclient_listener";
@@ -29,7 +29,9 @@ end
 function handle_xep_command(command)
 	local xepnum = command.param;
 	if not xepnum then return "Please supply an XEP number or a search string :)"; end
-	if not tonumber(xepnum) then -- Search for an XEP
+	if xeps_short[xepnum:lower()] then
+		xepnum = xeps_short[xepnum:lower()];
+	elseif not tonumber(xepnum) then -- Search for an XEP
 		if xepnum:match("^(%d+) ex%S* (%d+)$") then
 			local num, example = xepnum:match("^(%d+) ex%S* (%d+)$");
 			return "http://xmpp.org/extensions/xep-"..string.rep("0", 4-num:len())..num..".html#example-"..tostring(example);
@@ -78,7 +80,14 @@ function parse_xeps(t)
 			currxep[k] = v;
 		end
 		xeps[currxep.number] = { };
-		for k, v in pairs(currxep) do xeps[currxep.number][k] = v end
+		for k, v in pairs(currxep) do
+			xeps[currxep.number][k] = v;
+			if xeps_short[currxep.shortname] == nil then
+				xeps_short[currxep.shortname] = currxep.number;
+			elseif xeps_short[currxep.shortname] then
+				xeps_short[currxep.shortname] = false; -- kill dupes
+			end
+		end
 	end
 	xeps["0028"] = { number = "0028", name = "XSF Plans for World Domination", type="Top Secret", status = "Hidden", updated = "Work ongoing" };
 	return true;
