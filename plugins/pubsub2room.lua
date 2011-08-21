@@ -43,10 +43,10 @@ local last_message_time = 0;
 
 function riddim.plugins.pubsub2room(bot)
 	local bare_jid = require "util.jid".bare;
-	bot:add_plugin("pubsub");
+	bot.stream:add_plugin("pubsub");
 
 	local config = bot.config.pubsub2room;
-	bot:hook("pubsub/event", function(event)
+	bot.stream:hook("pubsub/event", function(event)
 		local conf = config[event.from .. "#" .. event.node];
 		local room = bot.rooms[conf.room];
 		local data = st.stanza(""):tag("id"):text(event.item.attr.id);
