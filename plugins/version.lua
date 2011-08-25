@@ -5,8 +5,9 @@ local xmlns_version = "jabber:iq:version";
 function riddim.plugins.version(bot)
 	bot.stream:add_plugin("version");
 	bot.stream.version:set{
-		name = "Riddim";
-		version = "alpha";
+		name = bot.config.bot_name or "Riddim";
+		version = bot.config.bot_version or "alpha";
+		platform = bot.config.bot_platform or _VERSION;
 	};
 
 	bot:hook("commands/version", function (command)
