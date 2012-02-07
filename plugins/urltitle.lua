@@ -12,7 +12,7 @@ function riddim.plugins.urltitle(bot)
 				if title then
 					title = title:gsub("\n", "");
 					if message.room then
-						message.room:send(title);
+						message.room:send_message(title)
 					else
 						message:reply(title);
 					end
