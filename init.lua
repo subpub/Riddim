@@ -120,6 +120,8 @@ if not (... and package.loaded[...] ~= nil) then
 		c:hook("incoming-raw", print);
 		c:hook("outgoing-raw", print);
 		verse.set_log_handler(print);
+	else
+		verse.set_log_handler(print, {"info","warn","error"});
 	end
 	
 	for _, plugin in ipairs(config.plugins or {}) do
