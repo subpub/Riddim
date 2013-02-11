@@ -81,6 +81,10 @@ function parse_xkcd_list(t)
 	if not t then return nil; end
 	for number, name in string.gmatch(t,"<a [^>]*href=\"/(%d+)/\"[^>]*>([^<]+)") do
 		xkcd_list[number] = name;
+		local number = tonumber(number);
+		if number then
+			xkcd_list[number] = name;
+		end
 	end
 	return true;
 end
