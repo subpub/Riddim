@@ -72,7 +72,7 @@ function riddim.plugins.pubsub2room(bot)
 		local jid = bare_jid(bot.stream.jid);
 		for hostnode in pairs(config) do
 			local host, node = hostnode:match("^([^#]+)#(.*)");
-			bot.stream.pubsub:subscribe(host, node, jid, print);
+			bot.stream.pubsub(host, node):subscribe(jid, print);
 		end
 	end);
 end
