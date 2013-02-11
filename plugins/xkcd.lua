@@ -34,7 +34,9 @@ end
 
 function handle_xkcd_command(command)
     local xkcdnum = command.param;
-    if not xkcdnum then return "Please supply an XKCD number or a search string :)"; end
+    if not xkcdnum then
+			xkcdnum = #xkcd_list;
+		end
     if not tonumber(xkcdnum) then -- Search for an xkcd
         xkcdnum = xkcdnum:lower()
         local xkcdpat = xkcdnum:gsub("[()]", function(s) return "%" .. s end)
