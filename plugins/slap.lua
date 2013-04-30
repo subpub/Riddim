@@ -5,7 +5,7 @@ local st = require 'util.stanza'
 function riddim.plugins.slap(bot)
    if type(bot.config.weapons) ~= 'table' then
       -- start off with something to slap people with
-      bot.config.weapons = {'large trout'}
+      bot.config.weapons = {'a large trout'}
    end
 
    -- slap someone
