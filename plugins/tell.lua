@@ -132,7 +132,7 @@ function riddim.plugins.tell(bot)
 			local nick_id = sameroom and room.jid .. "/" .. occupant.nick or occupant.nick;
 			if(tellings[nick_id] ~= nil) then
 				for _,msg in ipairs(tellings[nick_id]) do
-					room:send_message(occupant.nick .. ": Welcome back! " .. msg.from .. " told me, to tell you, \"" .. msg.msg .. "\".");
+					room:send_message(occupant.nick .. ": Welcome back! " .. msg.from .. " told me to tell you:\n" .. msg.msg);
 				end
 				tellings[nick_id] = nil;
 				remember();
