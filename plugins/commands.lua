@@ -19,6 +19,12 @@ function riddim.plugins.commands(bot)
 	
 		if not command then
 			command, hasparam, param = body:match("%[([%a%-%_%d]+)(%s?)(.*)%]");
+			if event.room then
+				local direct_to = body:match"^(.-)[,:]"
+				if event.room.occupants[direct_to] then
+					event.reply_to = direct_to
+				end
+			end
 		end
 		
 		if hasparam ~= " " then param = nil; end
