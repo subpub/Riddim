@@ -10,16 +10,11 @@ function riddim.plugins.version(bot)
 		platform = bot.config.bot_platform or _VERSION;
 	};
 
+	bot:add_plugin("resolvejid");
 	bot:hook("commands/version", function (command)
 		local who, param = bot.stream.jid, command.param;
 		if param then
-			if command.room and command.room.occupants[param] then
-				who = command.room.occupants[param].jid;
-			elseif command.room and command.room.occupants[param:gsub("%s$", "")] then
-				who = command.room.occupants[param:gsub("%s$", "")].jid;
-			else
-				who = param;
-			end
+			who = bot:resolvejid(param, command.room);
 		end
 		
 		bot.stream:query_version(who, function (reply)

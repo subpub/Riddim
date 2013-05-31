@@ -1,9 +1,11 @@
 
 function riddim.plugins.ping(bot)
 	bot.stream:add_plugin("ping");
+	bot:add_plugin("resolvejid");
 	bot:hook("commands/ping", function (command)
 		local jid = command.param;
 		if jid then
+			jid = bot:resolvejid(jid, command.room);
 			bot.stream:ping(jid, function (time, jid, error)
 				if time then
 					command:reply(string.format("Pong from %s in %0.3f seconds", jid, time));
