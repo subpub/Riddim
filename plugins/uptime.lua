@@ -27,7 +27,7 @@ function riddim.plugins.uptime(bot)
 				command:reply(reply_prefix..convert_time(reply.seconds));
 			else
 				local type, condition, text = reply.type, reply.condition, reply.text;
-				local r = "There was an error requesting "..param.."'s version";
+				local r = "There was an error requesting "..param.."'s uptime";
 				if condition == "service-unavailable" then
 					r = param.." doesn't reply to uptime/last activity requests";
 				elseif condition == "feature-not-implemented" then
