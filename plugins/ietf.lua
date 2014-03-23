@@ -54,10 +54,10 @@ function data.rfc:_search(string, cb)
 		link, match = self.data:match("\n(" .. number .. ")%s*([^\n]*)");
 		count = 1
 	else
-		local pat = string:gsub("[()]", function(s) return "%" .. s end)
-			:gsub("[%[]",function(s) return "%" .. s end)
+		local pat = string:gsub("[-()%[]", "%%%1")
 			:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end)
-			:gsub("\n+", " "):gsub("\\n", "");
+			:gsub("\n+", " "):gsub("\\n", "")
+			:gsub("%w", function(s) return '['..s:lower()..s:upper()..']' end)
 		debug("fulltext search for \"%s\"", pat);
 		--link, match = self.data:match("\n(%d%d%d%d) ([^\n]-"..pat.."[^\n]*)");
 		for l,m in self.data:gmatch("\n(%d%d%d%d) ([^\n]-"..pat.."[^\n]*)") do
@@ -106,10 +106,10 @@ end
 
 function data.draft:_search(string, cb)
 	debug("really search for %s", string);
-	local pat = string:gsub("[()]", function(s) return "%" .. s end)
-		:gsub("[%[]",function(s) return "%" .. s end)
+	local pat = string:gsub("[-()%[]", "%%%1")
 		:gsub("%%(%b[])",function(s) return (#s > 2 and "" or "%") .. s end)
-		:gsub("\n+", " "):gsub("\\n", "");
+		:gsub("\n+", " "):gsub("\\n", "")
+		:gsub("%w", function(s) return '['..s:lower()..s:upper()..']' end)
 	debug("fulltext search for \"%s\"", pat);
 	local match = self.data:match("\n([^\n]-"..pat.."[^\n]*)")
 
