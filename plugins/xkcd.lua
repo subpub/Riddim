@@ -1,6 +1,7 @@
 local parse_xkcd_list;
 local xkcd_list_updated_at = 0;
 local xkcd_list = { };
+local handle_xkcd_command;
 
 function riddim.plugins.xkcd(bot)
 	require "net.httpclient_listener";
