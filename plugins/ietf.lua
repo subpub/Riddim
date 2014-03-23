@@ -47,10 +47,12 @@ function data.rfc:_search(string, cb)
 	debug("really search for %s", string);
 	local number = tonumber(string);
 	local link, match, matches;
+	local count = 0
 	if number then
 		number = ("%04d"):format(number);
 		debug("search for RFC%s", number);
 		link, match = self.data:match("\n(" .. number .. ")%s*([^\n]*)");
+		count = 1
 	else
 		local pat = string:gsub("[()]", function(s) return "%" .. s end)
 			:gsub("[%[]",function(s) return "%" .. s end)
@@ -60,6 +62,7 @@ function data.rfc:_search(string, cb)
 		--link, match = self.data:match("\n(%d%d%d%d) ([^\n]-"..pat.."[^\n]*)");
 		for l,m in self.data:gmatch("\n(%d%d%d%d) ([^\n]-"..pat.."[^\n]*)") do
 			link, match = l, m
+			count = count + 1
 			-- Note: This allways returns the last result.
 			-- FIXME Decide on what to do if >1 results.
 		end
@@ -94,6 +97,7 @@ function data.rfc:_search(string, cb)
 		end);
 		link = self.links:format(link);
 		match = match:gsub("%. ", ".\n", 1); -- Add a newline between title and authors
+		if count > 1 then link = link .. " (" .. count .. " more matches)" end
 		cb(match .. "\n" .. link);
 	else
 		cb("Sorry, no match");
