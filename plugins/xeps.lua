@@ -2,7 +2,6 @@ local parse_xeps, xeps_updated_at;
 local xeps, xeps_short = {}, {};
 
 function riddim.plugins.xeps(bot)
-	require "net.httpclient_listener";
 	local http = require("net.http");
 	bot:hook("commands/xep", function(command)
 		-- Cache XEP list for an hour

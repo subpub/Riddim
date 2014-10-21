@@ -7,7 +7,6 @@ function riddim.plugins.trac(bot)
 	local trac = bot.config.trac;
 	if not trac then return end
 
-	require "net.httpclient_listener";
 	local http = require("net.http");
 
 	bot:hook("commands/ticket", function(command)

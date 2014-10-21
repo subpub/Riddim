@@ -4,7 +4,6 @@ local xkcd_list = { };
 local handle_xkcd_command;
 
 function riddim.plugins.xkcd(bot)
-	require "net.httpclient_listener";
 	local http = require("net.http");
 	bot:hook("commands/xkcd", function(command)
 		if os.difftime(os.time(), xkcd_list_updated_at) > (3 * 60 * 60) then -- Not refreshed within 3 hours
