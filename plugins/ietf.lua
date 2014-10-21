@@ -8,11 +8,11 @@ local ttl = 3600;
 local data = {
 	rfc = {
 		source = "http://www.ietf.org/download/rfc-index.txt",
-		links = "http://tools.ietf.org/html/rfc%s",
+		links = "https://tools.ietf.org/html/rfc%s",
 	},
 	draft = {
 		source = "http://www.ietf.org/download/id-index.txt",
-		links = "http://tools.ietf.org/html/%s",
+		links = "https://tools.ietf.org/html/%s",
 	},
 }
 
