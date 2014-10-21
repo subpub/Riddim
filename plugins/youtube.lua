@@ -2,7 +2,6 @@
 -- 
 -- This project is MIT/X11 licensed.
 --
-require("net.httpclient_listener");
 local http = require("net.http");
 local st = require("util.stanza");
 local tostring = tostring;

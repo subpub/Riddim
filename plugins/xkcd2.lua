@@ -1,5 +1,4 @@
 
-require "net.httpclient_listener";
 local http = require("net.http");
 local json = require"util.json";
 local bare_jid = require "util.jid".bare;

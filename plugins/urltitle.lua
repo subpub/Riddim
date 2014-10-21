@@ -1,5 +1,4 @@
 function riddim.plugins.urltitle(bot)
-	require "net.httpclient_listener";
 	local http = require "net.http";
 
 	local function handler(message)
