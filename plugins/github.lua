@@ -18,14 +18,12 @@ function riddim.plugins.github(bot)
 		base_path[5] = number;
 		base_url.path = url.build_path(base_path);
 		local url = url.build(base_url);
-		print("url:", url);
 		return url;
 	end
 
 	bot:hook("commands/issue", function (command)
 		local issue_id = tonumber(command.param);
 		if not issue_id then return; end
-		print(issue_id);
 		assert(http.request(issue_url(issue_id), ex, function (issue, code)
 			if code > 400 then
 				return command:reply("HTTP Error "..code.." :(");
