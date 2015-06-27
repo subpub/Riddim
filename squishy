@@ -21,6 +21,7 @@ plugins = {
 	"slap",
 	"topic",
 	"trac",
+	"github",
 	"urltitle",
 	"xeps",
 	"xkcd",
