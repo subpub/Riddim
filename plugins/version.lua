@@ -26,9 +26,14 @@ function riddim.plugins.version(bot)
 		bot.stream:query_version(who, function (reply)
 			if not reply.error then
 				local saywho = (who == command.sender.jid and "You are") or (param and param.." is" or "I am");
-				command:reply(saywho.." running "..(reply.name or "something")
-					.." version "..(reply.version or "unknown")
-					.." on "..(reply.platform or "an unknown platform"));
+				local isrunning = saywho.." running "..(reply.name or "something");
+				if reply.version then
+					isrunning = isrunning .." version "..reply.version;
+				end
+				if reply.platform then
+					isrunning = isrunning .." on "..reply.platform;
+				end
+				command:reply(isrunning);
 			else
 				local type, condition, text = reply.type, reply.condition, reply.text;
 				local r = "There was an error requesting "..param.."'s version";
