@@ -17,7 +17,7 @@ function riddim.plugins.xkcd2(bot)
 		local strip;
 
 		if q then
-			local t, num = q:match("^([#\"]?)(%d+)\"?$");
+			local t, num = q:match("^([#\"]?)(%-?%d+)\"?$");
 			if t ~= '"' then
 				num = tonumber(num);
 				if num and num < 0 then
