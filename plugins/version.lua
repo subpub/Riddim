@@ -2,6 +2,12 @@ local st = require "util.stanza";
 
 local xmlns_version = "jabber:iq:version";
 
+local friendly_errors = {
+	["service-unavailable"] = " doesn't reply to version requests";
+	["feature-not-implemented"] = " doesn't support version requests";
+	["remote-server-not-found"] = " can't be reached via XMPP";
+}
+
 function riddim.plugins.version(bot)
 	bot.stream:add_plugin("version");
 	bot.stream.version:set{
@@ -26,14 +32,11 @@ function riddim.plugins.version(bot)
 			else
 				local type, condition, text = reply.type, reply.condition, reply.text;
 				local r = "There was an error requesting "..param.."'s version";
-				if condition == "service-unavailable" then
-					r = param.." doesn't reply to version requests";
-				elseif condition == "feature-not-implemented" then
-					r = param.." doesn't support version requests";
-				elseif condition == "remote-server-not-found" then
-					r = param.." can't be reached via XMPP";
+				local friendly_error = friendly_errors[condition];
+				if friendly_error then
+					r = r .. friendly_error;
 				elseif condition and not text then
-					r = r..": "..condition;
+					r = r..": "..(condition):gsub("%-", "  ");
 				end
 				if text then
 					r = r .. " ("..text..")";
