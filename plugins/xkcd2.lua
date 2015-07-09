@@ -172,4 +172,5 @@ function riddim.plugins.xkcd2(bot)
 		return "List of strips emptied";
 	end);
 
+	do_load();
 end
