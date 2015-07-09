@@ -21,7 +21,7 @@ function riddim.plugins.xkcd2(bot)
 			if t ~= '"' then
 				num = tonumber(num);
 				if num and num < 0 then
-					num = #strip + num;
+					num = table.maxn(strips) + num;
 				end
 			end
 			strip = strips[num or q:lower()];
