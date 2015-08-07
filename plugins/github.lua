@@ -27,7 +27,7 @@ function riddim.plugins.github(bot)
 		if not issue_id then return; end
 		local current_conf = conf[command.room and command.room.jid] or conf;
 		if not current_conf.user then return end
-		assert(http.request(get_issue_url(issue_id), ex, function (issue, code)
+		assert(http.request(get_issue_url(current_conf, issue_id), ex, function (issue, code)
 			if code > 400 then
 				return command:reply("HTTP Error "..code.." :(");
 			end
