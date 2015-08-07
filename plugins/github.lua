@@ -6,7 +6,6 @@ function riddim.plugins.github(bot)
 	local conf = bot.config.github;
 	local base_url = url.parse("https://api.github.com/repos/x/y/issues/123");
 	local base_path = url.parse_path(base_url.path);
-	base_path[2], base_path[3] = conf.user, conf.project;
 
 	local ex = {
 		headers = {
@@ -14,7 +13,9 @@ function riddim.plugins.github(bot)
 		};
 	};
 
-	local function issue_url(number)
+	local function get_issue_url(conf, number)
+		base_path[2] = conf.user;
+		base_path[3] = conf.repo or conf.project;
 		base_path[5] = number;
 		base_url.path = url.build_path(base_path);
 		local url = url.build(base_url);
@@ -24,6 +25,8 @@ function riddim.plugins.github(bot)
 	bot:hook("commands/issue", function (command)
 		local issue_id = tonumber(command.param);
 		if not issue_id then return; end
+		local current_conf = conf[command.room and command.room.jid or "default"];
+		if not current_conf then return end
 		assert(http.request(issue_url(issue_id), ex, function (issue, code)
 			if code > 400 then
 				return command:reply("HTTP Error "..code.." :(");
