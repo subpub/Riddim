@@ -25,9 +25,9 @@ function riddim.plugins.github(bot)
 	bot:hook("commands/issue", function (command)
 		local issue_id = tonumber(command.param);
 		if not issue_id then return; end
-		local current_conf = conf[command.room and command.room.jid or "default"];
-		if not current_conf then return end
-		assert(http.request(issue_url(issue_id), ex, function (issue, code)
+		local current_conf = conf[command.room and command.room.jid] or conf;
+		if not current_conf.user then return end
+		assert(http.request(get_issue_url(issue_id), ex, function (issue, code)
 			if code > 400 then
 				return command:reply("HTTP Error "..code.." :(");
 			end
@@ -35,7 +35,7 @@ function riddim.plugins.github(bot)
 			if not issue then
 				return command:reply("Got invalid JSON back :(");
 			end
-			command:reply(("%s #%d\n%s"):format(issue.title, issue.number issue.html_url));
+			command:reply(("%s #%d\n%s"):format(issue.title, issue.number, issue.html_url));
 		end));
 		return true;
 	end);
