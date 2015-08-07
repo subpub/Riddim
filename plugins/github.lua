@@ -44,8 +44,6 @@ function riddim.plugins.github(bot)
 		end
 	end
 
-	bot:hook("message", check_for_issue_id);
-
 	bot:hook("groupchat/joining", function (room)
 		room:hook("message", check_for_issue_id);
 	end);
