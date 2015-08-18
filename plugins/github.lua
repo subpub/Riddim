@@ -1,3 +1,13 @@
+-- Plugin for querying a Github issue-tracker
+--
+-- Example config:
+-- github = {
+--   ["project@conference.example.org"] = {
+--     user = "TheArchitect";
+--     repo = "TheMatrix";
+--   }
+-- }
+
 local url = require"socket.url";
 local json = require"util.json";
 local http = require"net.http";
