@@ -17,11 +17,11 @@ function riddim.plugins.xkcd2(bot)
 		local strip;
 
 		if q then
-			local t, num = q:match("^([#\"]?)(%d+)\"?$");
+			local t, num = q:match("^([#\"]?)(%-?%d+)\"?$");
 			if t ~= '"' then
 				num = tonumber(num);
 				if num and num < 0 then
-					num = #strip + num;
+					num = table.maxn(strips) + num;
 				end
 			end
 			strip = strips[num or q:lower()];
@@ -172,4 +172,5 @@ function riddim.plugins.xkcd2(bot)
 		return "List of strips emptied";
 	end);
 
+	do_load();
 end

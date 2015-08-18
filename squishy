@@ -1,11 +1,37 @@
-Module "riddim.plugins.autosubscribe"  "plugins/autosubscribe.lua"
-Module "riddim.plugins.groupchat"      "plugins/groupchat.lua"
-Module "riddim.plugins.commands"       "plugins/commands.lua"
-Module "riddim.plugins.version"        "plugins/version.lua"
-Module "riddim.plugins.ping"           "plugins/ping.lua"
-Module "riddim.plugins.tell"           "plugins/tell.lua"
-Module "riddim.plugins.uptime"         "plugins/uptime.lua"
-Module "riddim.plugins.resolvejid"     "plugins/resolvejid.lua"
+-- Riddim plugins
+plugins = {
+	"autosubscribe",
+	"groupchat",
+	"commands",
+	"version",
+	"ping",
+	"tell",
+	"uptime",
+	"resolvejid",
+	"bookmarks",
+	"bugzilla",
+	"disco",
+	"factoids",
+	"ietf",
+	"invited",
+	"msgforward",
+	"opdown",
+	"pubsub2room",
+	"simple_commands",
+	"slap",
+	"topic",
+	"trac",
+	"github",
+	"urltitle",
+	"xeps",
+	"xkcd",
+	"xkcd2",
+	"youtube",
+}
+
+for _, plugin in ipairs(plugins) do
+	Module("riddim.plugins."..plugin)("plugins/"..plugin..".lua")
+end
 
 Main "init.lua"
 

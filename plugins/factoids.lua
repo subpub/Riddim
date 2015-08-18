@@ -89,15 +89,10 @@ function storage_backends.lua(bot, factoids)
 		load = function()
 			local chunk, err = loadfile(factoids_file);
 			if chunk then
-				local old_mt = getmetatable(factoids);
-				setmetatable(factoids, {
-					__newindex = function (...) rawset(...); print(...) end
-				});
 				setfenv(chunk, {_G = factoids} );
 				chunk();
-				setmetatable(factoids, old_mt);
 			else
-				print(err);
+				bot.stream:err(tostring(err));
 			end
 		end,
 		save = function()
@@ -130,7 +125,6 @@ function storage_backends.lua(bot, factoids)
 	actions.load();
 	setmetatable(factoids, {
 		__newindex = function(t, k, v)
-			print("__newindex", t, k, v);
 			rawset(t, k, v);
 			actions.add(k, v);
 		end,
@@ -168,7 +162,6 @@ function storage_backends.serialize(bot, factoids)
 	actions.load();
 	setmetatable(factoids, {
 		__newindex = function(t, k, v)
-			print("__newindex", t, k, v);
 			rawset(t, k, v);
 			actions.add(k, v);
 		end,
@@ -185,14 +178,9 @@ function storage_backends.iq_private(bot, factoids)
 		load = function()
 			bot.stream:private_get(factoids_node, factoids_xmlns, function (storage)
 				if storage then
-					local old_mt = getmetatable(factoids);
-					setmetatable(factoids, {
-						__newindex = function (...) rawset(...); print(...) end
-					});
 					for factoid in storage:children() do
 						factoids[factoid.attr.name or "something-invalid"] = factoid:get_text();
 					end
-					setmetatable(factoids, old_mt);
 				end
 			end);
 		end,
@@ -210,7 +198,6 @@ function storage_backends.iq_private(bot, factoids)
 		actions.load();
 		setmetatable(factoids, {
 			__newindex = function(t, k, v)
-				print("__newindex", t, k, v);
 				rawset(t, k, v);
 				actions.add(k, v);
 			end,
