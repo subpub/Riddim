@@ -99,6 +99,8 @@ function data.rfc:_search(string, cb)
 		match = match:gsub("%. ", ".\n", 1); -- Add a newline between title and authors
 		if count > 1 then link = link .. " (" .. count .. " more matches)" end
 		cb(match .. "\n" .. link);
+	elseif number then
+		cb("Sorry, no match, try " .. self.links:format(number));
 	else
 		cb("Sorry, no match");
 	end
