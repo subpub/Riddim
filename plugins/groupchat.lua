@@ -1,4 +1,5 @@
 local st = require "util.stanza";
+local jid = require "util.jid";
 local xmlns_muc = "http://jabber.org/protocol/muc";
 
 function riddim.plugins.groupchat(bot)
